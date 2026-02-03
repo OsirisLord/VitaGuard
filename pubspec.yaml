@@ -1,0 +1,94 @@
+name: vitaguard
+description: "VitaGuard - Smart Diagnosing and Monitoring System for Patients with Chest Diseases"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  flutter_bloc: ^8.1.3
+  equatable: ^2.0.5
+  
+  # Dependency Injection
+  get_it: ^7.6.4
+  injectable: ^2.3.2
+  
+  # Networking
+  dio: ^5.4.0
+  connectivity_plus: ^5.0.2
+  
+  # Firebase
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.16.0
+  cloud_firestore: ^4.14.0
+  firebase_storage: ^11.6.0
+  firebase_messaging: ^14.7.10
+  firebase_crashlytics: ^3.4.9
+  
+  # Security
+  flutter_secure_storage: ^9.0.0
+  encrypt: ^5.0.3
+  local_auth: ^2.1.8
+  crypto: ^3.0.3
+  
+  # AI/ML (placeholder - will be enabled when model is ready)
+  # tflite_flutter: ^0.10.4
+  image: ^4.1.4
+  
+  # WiFi/IoT
+  http: ^1.2.0
+  web_socket_channel: ^2.4.0
+  
+  # UI
+  go_router: ^13.0.0
+  cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
+  fl_chart: ^0.66.0
+  lottie: ^3.0.0
+  flutter_svg: ^2.0.9
+  image_picker: ^1.0.7
+  
+  # Utilities
+  intl: ^0.18.1
+  logger: ^2.0.2
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+  uuid: ^4.3.3
+  rxdart: ^0.27.7
+  dartz: ^0.10.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  build_runner: ^2.4.7
+  freezed: ^2.4.6
+  json_serializable: ^6.7.1
+  injectable_generator: ^2.4.1
+  mockito: ^5.4.4
+  bloc_test: ^9.1.5
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/animations/
+    - assets/models/
+  
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
