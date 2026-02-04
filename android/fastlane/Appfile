@@ -1,0 +1,2 @@
+json_key_file("fastlane-json-key.json") # Path to your Play Store JSON key
+package_name("com.vitaguard.app") # Your package name

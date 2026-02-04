@@ -176,10 +176,45 @@ class PatientDashboardPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Show confirmation
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('EMERGENCY SOS', style: TextStyle(color: Colors.red)),
+              content: const Text('This will send a critical alert to all your companions and doctors. Are you sure?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('SOS Alert Sent! Helpers notified.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    // TODO: Trigger actual backend alert
+                  },
+                  child: const Text('SEND SOS NOW'),
+                ),
+              ],
+            ),
+          );
+        },
+        backgroundColor: Colors.red,
+        icon: const Icon(Icons.warning_amber_rounded, color: Colors.white),
+        label: const Text('SOS', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: 0,
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.home),
             label: 'Home',
           ),

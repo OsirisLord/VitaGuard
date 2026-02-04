@@ -1,0 +1,5 @@
+app_identifier("com.vitaguard.app") # The bundle identifier of your app
+apple_id("developer@vitaguard.com") # Your Apple email address
+
+itc_team_id("12345678") # App Store Connect Team ID
+team_id("ABCDEFGHIJ") # Developer Portal Team ID

@@ -37,12 +37,18 @@ dependencies:
   crypto: ^3.0.3
   
   # AI/ML (placeholder - will be enabled when model is ready)
-  # tflite_flutter: ^0.10.4
+  tflite_flutter: ^0.10.4
   image: ^4.1.4
   
   # WiFi/IoT
   http: ^1.2.0
   web_socket_channel: ^2.4.0
+  
+  # Reports & Printing
+  pdf: ^3.10.4
+  printing: ^5.11.0
+  path_provider: ^2.1.1
+  flutter_local_notifications: ^16.3.1
   
   # UI
   go_router: ^13.0.0

@@ -13,8 +13,12 @@ import '../../features/notifications/presentation/pages/notifications_page.dart'
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/onboarding/presentation/pages/role_selection_page.dart';
 import '../../features/patient/presentation/pages/patient_dashboard_page.dart';
+import '../../features/patient/presentation/pages/vital_monitoring_page.dart';
+import '../../features/patient/presentation/pages/xray_analysis_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
+import '../../features/chat/presentation/pages/chat_list_page.dart';
+import '../../features/chat/presentation/pages/chat_detail_page.dart';
 
 /// Application router configuration using go_router.
 abstract class AppRouter {
@@ -99,12 +103,12 @@ abstract class AppRouter {
           GoRoute(
             path: 'xray-analysis',
             name: 'patientXrayAnalysis',
-            builder: (context, state) => const Placeholder(),
+            builder: (context, state) => const XrayAnalysisPage(),
           ),
           GoRoute(
             path: 'vitals',
             name: 'patientVitals',
-            builder: (context, state) => const Placeholder(),
+            builder: (context, state) => const VitalMonitoringPage(),
           ),
         ],
       ),
@@ -149,14 +153,18 @@ abstract class AppRouter {
       GoRoute(
         path: chat,
         name: 'chat',
-        builder: (context, state) => const Placeholder(),
+        builder: (context, state) => const ChatListPage(),
         routes: [
           GoRoute(
-            path: ':chatId',
+            path: ':userId',
             name: 'chatDetail',
             builder: (context, state) {
-              final chatId = state.pathParameters['chatId']!;
-              return Placeholder(key: ValueKey(chatId));
+              final userId = state.pathParameters['userId']!;
+              final extra = state.extra as String?;
+              return ChatDetailPage(
+                otherUserId: userId,
+                otherUserName: extra,
+              );
             },
           ),
         ],
