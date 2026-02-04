@@ -1,8 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:vitaguard/core/errors/failures.dart';
 import 'package:vitaguard/features/auth/domain/entities/user.dart';
 import 'package:vitaguard/features/auth/domain/usecases/get_current_user.dart';
@@ -11,9 +10,14 @@ import 'package:vitaguard/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:vitaguard/features/auth/domain/usecases/register_usecase.dart';
 import 'package:vitaguard/features/auth/presentation/bloc/auth_bloc.dart';
 
-import 'auth_bloc_test.mocks.dart';
+class MockLoginUseCase extends Mock implements LoginUseCase {}
 
-@GenerateMocks([LoginUseCase, RegisterUseCase, LogoutUseCase, GetCurrentUser])
+class MockRegisterUseCase extends Mock implements RegisterUseCase {}
+
+class MockLogoutUseCase extends Mock implements LogoutUseCase {}
+
+class MockGetCurrentUser extends Mock implements GetCurrentUser {}
+
 void main() {
   late AuthBloc authBloc;
   late MockLoginUseCase mockLoginUseCase;
@@ -56,10 +60,10 @@ void main() {
   blocTest<AuthBloc, AuthState>(
     'emits [AuthLoading, Authenticated] when LoginRequested is added and success',
     build: () {
-      when(mockLoginUseCase(
-              email: anyNamed('email'), password: anyNamed('password')))
+      when(() => mockLoginUseCase(
+              email: any(named: 'email'), password: any(named: 'password')))
           .thenAnswer((_) async => Right(tUser));
-      when(mockGetCurrentUser()).thenAnswer((_) async => Right(tUser));
+      when(() => mockGetCurrentUser()).thenAnswer((_) async => Right(tUser));
       return authBloc;
     },
     act: (bloc) =>
@@ -73,8 +77,8 @@ void main() {
   blocTest<AuthBloc, AuthState>(
     'emits [AuthLoading, AuthError] when LoginRequested is added and failure',
     build: () {
-      when(mockLoginUseCase(
-              email: anyNamed('email'), password: anyNamed('password')))
+      when(() => mockLoginUseCase(
+              email: any(named: 'email'), password: any(named: 'password')))
           .thenAnswer(
               (_) async => const Left(ServerFailure(message: 'Server Error')));
       return authBloc;
@@ -90,7 +94,8 @@ void main() {
   blocTest<AuthBloc, AuthState>(
     'emits [AuthLoading, Unauthenticated] when LogoutRequested is added',
     build: () {
-      when(mockLogoutUseCase()).thenAnswer((_) async => const Right(unit));
+      when(() => mockLogoutUseCase())
+          .thenAnswer((_) async => const Right(unit));
       return authBloc;
     },
     act: (bloc) => bloc.add(const AuthLogoutRequested()),

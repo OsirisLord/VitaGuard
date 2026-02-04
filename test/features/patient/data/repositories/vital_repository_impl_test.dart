@@ -2,15 +2,13 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:vitaguard/core/services/websocket_service.dart';
 import 'package:vitaguard/features/patient/data/repositories/vital_repository_impl.dart';
 import 'package:vitaguard/features/patient/domain/entities/vital_sign.dart';
 
-import 'vital_repository_impl_test.mocks.dart';
+class MockWebSocketService extends Mock implements WebSocketService {}
 
-@GenerateMocks([WebSocketService])
 void main() {
   late VitalRepositoryImpl repository;
   late MockWebSocketService mockWebSocketService;
@@ -21,7 +19,7 @@ void main() {
     websocketController = StreamController<dynamic>();
 
     // Mock stream behavior
-    when(mockWebSocketService.stream)
+    when(() => mockWebSocketService.stream)
         .thenAnswer((_) => websocketController.stream);
 
     repository = VitalRepositoryImpl(mockWebSocketService);
@@ -40,17 +38,19 @@ void main() {
     await repository.connect(tIp);
 
     // Assert
-    verify(mockWebSocketService.connect('ws://$tIp:81'));
+    verify(() => mockWebSocketService.connect('ws://$tIp:81')).called(1);
   });
 
   test('should emit VitalSign when valid JSON is received', () async {
     // Arrange
     // We need to mock parseData because repository uses it
-    when(mockWebSocketService.parseData(any)).thenAnswer((realInvocation) {
+    when(() => mockWebSocketService.parseData(any()))
+        .thenAnswer((realInvocation) {
       // Simple manual mock logic or use ArgumentCaptor if needed
       // But since we are mocking the service, we should mock this helper too
       // The implementation calls _socketService.parseData
-      if (realInvocation.positionalArguments[0] == tVitalJson) {
+      final dynamic arg = realInvocation.positionalArguments[0];
+      if (arg == tVitalJson) {
         return {"spo2": 98, "bpm": 75, "temp": 36.5};
       }
       return null;

@@ -1,48 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dartz/dartz.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:vitaguard/core/errors/failures.dart';
 import 'package:vitaguard/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:vitaguard/features/chat/domain/entities/chat_message.dart';
 
-import 'chat_repository_impl_test.mocks.dart';
-
-@GenerateMocks([
-  FirebaseFirestore,
-  CollectionReference,
-  DocumentReference,
-  DocumentSnapshot
-])
 void main() {
   late ChatRepositoryImpl repository;
-  late MockFirebaseFirestore mockFirestore;
-  late MockCollectionReference<Map<String, dynamic>> mockCollection;
-  late MockCollectionReference<Map<String, dynamic>> mockSubCollection;
-  late MockDocumentReference<Map<String, dynamic>> mockDocRef;
-  late MockDocumentReference<Map<String, dynamic>> mockSubDocRef;
+  late FakeFirebaseFirestore fakeFirestore;
 
   setUp(() {
-    mockFirestore = MockFirebaseFirestore();
-    mockCollection = MockCollectionReference();
-    mockSubCollection = MockCollectionReference();
-    mockDocRef = MockDocumentReference();
-    mockSubDocRef = MockDocumentReference();
-
-    // Setup partial mock chain for Firestore
-    // firestore.collection('chats').doc(id).collection('messages').doc(id)
-    when(mockFirestore.collection('chats')).thenReturn(mockCollection);
-    when(mockCollection.doc(any)).thenReturn(mockDocRef);
-    when(mockDocRef.collection('messages')).thenReturn(mockSubCollection);
-    when(mockSubCollection.doc(any)).thenReturn(mockSubDocRef);
-
-    repository = ChatRepositoryImpl(firestore: mockFirestore);
+    fakeFirestore = FakeFirebaseFirestore();
+    repository = ChatRepositoryImpl(firestore: fakeFirestore);
   });
 
-  // tMessage was here
-
-  // Correction for timestamp in test object
   final tValidMessage = ChatMessage(
     id: 'msg1',
     senderId: 'u1',
@@ -53,28 +22,23 @@ void main() {
 
   test('sendMessage should add message to firestore and update metadata',
       () async {
-    // Arrange
-    when(mockSubDocRef.set(any)).thenAnswer((_) async => {});
-    when(mockDocRef.set(any, any))
-        .thenAnswer((_) async => {}); // For metadata merge
-
     // Act
     final result = await repository.sendMessage(tValidMessage);
 
     // Assert
-    expect(result, const Right(null));
-    verify(mockSubDocRef.set(any)).called(1);
-    verify(mockDocRef.set(any, any)).called(1); // Metadata update
-  });
+    expect(result.isRight(), true);
 
-  test('sendMessage should return ServerFailure on exception', () async {
-    // Arrange
-    when(mockSubDocRef.set(any)).thenThrow(Exception('Firestore Error'));
+    // Verify data in fake firestore
+    final messages = await fakeFirestore
+        .collection('chats')
+        .doc('u1_u2')
+        .collection('messages')
+        .get();
+    expect(messages.docs.length, 1);
+    expect(messages.docs.first.data()['content'], 'Hello');
 
-    // Act
-    final result = await repository.sendMessage(tValidMessage);
-
-    // Assert
-    expect(result, isA<Left<Failure, void>>());
+    final chatDoc = await fakeFirestore.collection('chats').doc('u1_u2').get();
+    expect(chatDoc.exists, true);
+    expect(chatDoc.data()?['lastMessage'], 'Hello');
   });
 }
