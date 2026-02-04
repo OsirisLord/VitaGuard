@@ -1,4 +1,4 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 /// Service to check network connectivity.
 abstract class NetworkInfo {
@@ -9,32 +9,23 @@ abstract class NetworkInfo {
   Stream<bool> get onConnectivityChanged;
 }
 
-/// Implementation of NetworkInfo using connectivity_plus.
+/// Implementation of NetworkInfo using connectivity_plus and internet_connection_checker_plus.
 class NetworkInfoImpl implements NetworkInfo {
-  final Connectivity _connectivity;
+  final InternetConnection _internetConnection;
 
-  NetworkInfoImpl() : _connectivity = Connectivity();
+  NetworkInfoImpl({
+    InternetConnection? internetConnection,
+  }) : _internetConnection = internetConnection ?? InternetConnection();
 
   @override
   Future<bool> get isConnected async {
-    final result = await _connectivity.checkConnectivity();
-    return _isConnectedResult(result);
+    return await _internetConnection.hasInternetAccess;
   }
 
   @override
   Stream<bool> get onConnectivityChanged {
-    return _connectivity.onConnectivityChanged.map(_isConnectedResult);
-  }
-
-  bool _isConnectedResult(List<ConnectivityResult> results) {
-    // Check if any of the results indicate a connection
-    for (final result in results) {
-      if (result == ConnectivityResult.wifi ||
-          result == ConnectivityResult.mobile ||
-          result == ConnectivityResult.ethernet) {
-        return true;
-      }
-    }
-    return false;
+    return _internetConnection.onStatusChange.map(
+      (status) => status == InternetStatus.connected,
+    );
   }
 }

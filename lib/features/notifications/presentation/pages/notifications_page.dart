@@ -62,12 +62,12 @@ class _NotificationCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: notification.isRead
             ? AppColors.surface
-            : color.withOpacity(0.05),
+            : color.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: notification.isRead
               ? Colors.grey.shade200
-              : color.withOpacity(0.2),
+              : color.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -76,7 +76,7 @@ class _NotificationCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -90,8 +90,9 @@ class _NotificationCard extends StatelessWidget {
                   notification.title,
                   style: AppTextStyles.labelLarge.copyWith(
                     color: AppColors.textPrimary,
-                    fontWeight:
-                        notification.isRead ? FontWeight.normal : FontWeight.w600,
+                    fontWeight: notification.isRead
+                        ? FontWeight.normal
+                        : FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -145,7 +146,8 @@ class _NotificationItem {
 const _mockNotifications = [
   _NotificationItem(
     title: 'Low SpO2 Alert',
-    message: 'Your oxygen saturation dropped below 92%. Please monitor closely.',
+    message:
+        'Your oxygen saturation dropped below 92%. Please monitor closely.',
     time: '5 minutes ago',
     type: 'warning',
   ),

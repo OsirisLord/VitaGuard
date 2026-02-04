@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../depedency_injection.dart';
+import '../../../../injection_container.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../domain/entities/chat_message.dart';
@@ -32,7 +32,9 @@ class ChatDetailPage extends StatelessWidget {
       create: (context) => ChatBloc(
         repository: sl(),
         currentUserId: currentUserId,
-      )..add(LoadMessages(otherUserId))..addInternalHandlers(), // Initialize handlers
+      )
+        ..add(LoadMessages(otherUserId))
+        ..addInternalHandlers(), // Initialize handlers
       child: _ChatDetailView(
         otherUserName: otherUserName ?? 'Chat',
         otherUserId: otherUserId,
@@ -74,7 +76,7 @@ class _ChatDetailViewState extends State<_ChatDetailView> {
                 if (state is ChatLoading && state is! ChatLoaded) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                
+
                 if (state is ChatLoaded) {
                   final messages = state.messages;
                   if (messages.isEmpty) {
@@ -92,7 +94,7 @@ class _ChatDetailViewState extends State<_ChatDetailView> {
                     },
                   );
                 }
-                
+
                 return const SizedBox.shrink();
               },
             ),
@@ -132,11 +134,11 @@ class _ChatDetailViewState extends State<_ChatDetailView> {
                 final content = _controller.text.trim();
                 if (content.isNotEmpty) {
                   context.read<ChatBloc>().add(
-                    SendMessage(
-                      receiverId: widget.otherUserId,
-                      content: content,
-                    ),
-                  );
+                        SendMessage(
+                          receiverId: widget.otherUserId,
+                          content: content,
+                        ),
+                      );
                   _controller.clear();
                 }
               },
@@ -164,7 +166,8 @@ class _MessageBubble extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.only(

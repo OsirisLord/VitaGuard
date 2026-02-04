@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
-import '../../../../depedency_injection.dart';
+import '../../../../injection_container.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../bloc/chat_bloc.dart';
@@ -62,7 +60,7 @@ class _ChatListView extends StatelessWidget {
                 child: Text('No conversations yet'),
               );
             }
-            
+
             return ListView.builder(
               itemCount: state.partnerIds.length,
               itemBuilder: (context, index) {

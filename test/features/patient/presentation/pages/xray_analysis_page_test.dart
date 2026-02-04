@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vitaguard/core/services/report_service.dart';
-import 'package:vitaguard/depedency_injection.dart';
+import 'package:vitaguard/injection_container.dart';
 import 'package:vitaguard/features/auth/domain/entities/user.dart';
 import 'package:vitaguard/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:vitaguard/features/auth/presentation/bloc/auth_state.dart';
@@ -15,7 +15,9 @@ import 'package:vitaguard/features/patient/presentation/bloc/scan_bloc.dart';
 import 'package:vitaguard/features/patient/presentation/pages/xray_analysis_page.dart';
 
 class MockScanBloc extends MockBloc<ScanEvent, ScanState> implements ScanBloc {}
+
 class MockAuthBloc extends MockBloc<AuthEvent, AuthState> implements AuthBloc {}
+
 class MockReportService extends Mock implements ReportService {}
 
 void main() {
@@ -39,10 +41,9 @@ void main() {
     return MaterialApp(
       home: MultiBlocProvider(
         providers: [
-          BlocProvider<ScanBloc>.value(value: mockScanBloc),
           BlocProvider<AuthBloc>.value(value: mockAuthBloc),
         ],
-        child: const XrayAnalysisPage(),
+        child: XrayAnalysisPage(scanBloc: mockScanBloc),
       ),
     );
   }
@@ -51,11 +52,17 @@ void main() {
   // However, tests usually fail rendering Image.file with dummy paths on non-device.
   // We'll skip image rendering verification or use createLocalImageConfiguration for advanced tests.
   // For now we assume Image.file might throw but we check other widgets.
-  
-  const tUser = User(id: '1', email: 'test', name: 'Test', role: 'patient');
-    
+
+  final tUser = User(
+    id: '1',
+    email: 'test',
+    displayName: 'Test',
+    role: 'patient',
+    createdAt: DateTime.now(),
+  );
+
   testWidgets('renders initial upload options', (tester) async {
-    when(() => mockAuthBloc.state).thenReturn(const Authenticated(user: tUser));
+    when(() => mockAuthBloc.state).thenReturn(Authenticated(tUser));
     when(() => mockScanBloc.state).thenReturn(ScanInitial());
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -66,12 +73,16 @@ void main() {
   });
 
   testWidgets('shows result view when analysis succeeds', (tester) async {
-    when(() => mockAuthBloc.state).thenReturn(const Authenticated(user: tUser));
-    
+    when(() => mockAuthBloc.state).thenReturn(Authenticated(tUser));
+
     final tResult = DiagnosisResult(
-      id: '1', patientId: '1', timestamp: DateTime.now(), imageUrl: '', 
-      diagnosis: 'Normal', confidence: 0.9, probabilities: const {}
-    );
+        id: '1',
+        patientId: '1',
+        timestamp: DateTime.now(),
+        imageUrl: '',
+        diagnosis: 'Normal',
+        confidence: 0.9,
+        probabilities: const {});
     // Use an icon or dummy file. In widget tests, File('x') often works if not actually read bytes.
     // If it fails, we will see.
     when(() => mockScanBloc.state).thenReturn(
@@ -81,10 +92,10 @@ void main() {
     // Override Image.file behavior?
     // In widget tests, typically we rely on IOOverrides or ignore image errors.
     // Let's rely on standard flutter_test behavior which may throw exception (FileSystemException).
-    // To handle this properly, simpler to wrap Image.file or mock the widget. 
+    // To handle this properly, simpler to wrap Image.file or mock the widget.
     // BUT, finding texts should work before layout/paint if pumped properly.
-    
-    // Actually, `Image.file` will try to read immediately. 
+
+    // Actually, `Image.file` will try to read immediately.
     // We will assume for this test environment we can't easily test the Image widget itself without more setup.
     // So we test the TEXT content which should be present in the tree.
   });

@@ -2,13 +2,10 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/services/websocket_service.dart';
-import '../entities/vital_sign.dart';
+import '../../domain/entities/vital_sign.dart';
+import '../../domain/repositories/vital_repository.dart';
 
-abstract class VitalRepository {
-  Stream<Either<Failure, VitalSign>> get vitalSignStream;
-  Future<void> connect(String deviceIp);
-  Future<void> disconnect();
-}
+// Interface is imported from domain
 
 class VitalRepositoryImpl implements VitalRepository {
   final WebSocketService _socketService;

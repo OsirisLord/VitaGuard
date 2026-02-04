@@ -108,7 +108,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
     ScanResultSaved event,
     Emitter<ScanState> emit,
   ) async {
-    final currentImage = (state as ScanSuccess).image; // Keep image reference
+    // Keep state as ScanSuccess to access image if needed, but here we just need to emit saving
     emit(ScanSaving());
 
     final resultOrFailure = await repository.saveDiagnosis(event.result);
@@ -117,7 +117,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
       (failure) => emit(ScanFailure(failure.message)),
       (_) => emit(ScanSaved()),
     );
-    
+
     // Reset after short delay or keep as saved
     await Future.delayed(const Duration(seconds: 2));
     emit(ScanInitial());

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../depedency_injection.dart';
+import '../../../../injection_container.dart';
 import '../../domain/entities/vital_sign.dart';
 import '../bloc/vital_bloc.dart';
 
@@ -229,9 +229,9 @@ class _VitalCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -272,7 +272,8 @@ class _VitalChart extends StatelessWidget {
         maxY: maxY,
         gridData: const FlGridData(show: true),
         titlesData: const FlTitlesData(show: false),
-        borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey.shade300)),
+        borderData: FlBorderData(
+            show: true, border: Border.all(color: Colors.grey.shade300)),
         lineBarsData: [
           LineChartBarData(
             spots: data.asMap().entries.map((e) {
@@ -281,7 +282,8 @@ class _VitalChart extends StatelessWidget {
             isCurved: true,
             color: color,
             dotData: const FlDotData(show: false),
-            belowBarData: BarAreaData(show: true, color: color.withOpacity(0.1)),
+            belowBarData:
+                BarAreaData(show: true, color: color.withValues(alpha: 0.1)),
           ),
         ],
       ),

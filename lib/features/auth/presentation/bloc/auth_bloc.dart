@@ -9,6 +9,9 @@ import '../../domain/usecases/register_usecase.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
+export 'auth_event.dart';
+export 'auth_state.dart';
+
 /// BLoC for managing authentication state.
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase loginUseCase;
@@ -62,7 +65,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     result.fold(
-      (failure) => emit(AuthError(message: failure.message, code: failure.code)),
+      (failure) =>
+          emit(AuthError(message: failure.message, code: failure.code)),
       (user) => emit(Authenticated(user)),
     );
   }
@@ -83,7 +87,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     result.fold(
-      (failure) => emit(AuthError(message: failure.message, code: failure.code)),
+      (failure) =>
+          emit(AuthError(message: failure.message, code: failure.code)),
       (user) => emit(AuthRegistrationSuccess(
         user: user,
         needsEmailVerification: !user.emailVerified,
@@ -100,7 +105,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await logoutUseCase();
 
     result.fold(
-      (failure) => emit(AuthError(message: failure.message, code: failure.code)),
+      (failure) =>
+          emit(AuthError(message: failure.message, code: failure.code)),
       (_) => emit(const Unauthenticated()),
     );
   }

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import '../../errors/exceptions.dart';
+import '../errors/exceptions.dart';
 
 class WebSocketService {
   WebSocketChannel? _channel;
@@ -11,7 +11,7 @@ class WebSocketService {
 
   // Default ESP32 WebSocket URL (often just IP:81 or similar)
   // Configurable for production
-  String _currentUrl = 'ws://192.168.4.1:81'; 
+  String _currentUrl = 'ws://192.168.4.1:81';
 
   Stream<dynamic> get stream {
     if (_streamController == null) {
@@ -63,7 +63,7 @@ class WebSocketService {
   void _reconnect() {
     _isConnected = false;
     _channel?.sink.close();
-    
+
     _reconnectTimer?.cancel();
     _reconnectTimer = Timer(const Duration(seconds: 3), () {
       if (_streamController != null && !_streamController!.isClosed) {
@@ -87,7 +87,7 @@ class WebSocketService {
       throw const ServerException(message: 'WebSocket not connected');
     }
   }
-  
+
   /// Helper to parse typical JSON data from ESP32
   /// Expected format: {"spo2": 98, "bpm": 72, "temp": 37.0}
   Map<String, dynamic>? parseData(String data) {

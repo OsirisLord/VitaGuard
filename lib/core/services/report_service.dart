@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -12,7 +10,7 @@ class ReportService {
   Future<void> generateDiagnosisReport(
       DiagnosisResult diagnosis, User patient, User? doctor) async {
     final doc = pw.Document();
-    
+
     // Load font if needed, otherwise use default
     // final font = await PdfGoogleFonts.interRegular();
 
@@ -52,7 +50,9 @@ class ReportService {
           children: [
             pw.Text('VitaGuard',
                 style: pw.TextStyle(
-                    fontSize: 24, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+                    fontSize: 24,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColors.blue)),
             pw.Text('Smart Chest Disease Diagnosis',
                 style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
           ],
@@ -73,7 +73,8 @@ class ReportService {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Text('Patient Information',
-              style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+              style:
+                  pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
           pw.SizedBox(height: 5),
           pw.Text('Name: ${patient.name}'),
           pw.Text('ID: ${patient.id}'),
@@ -105,15 +106,16 @@ class ReportService {
           ],
         ),
         pw.SizedBox(height: 5),
-        pw.Text('Confidence: ${(diagnosis.confidence * 100).toStringAsFixed(1)}%'),
-        pw.Text('Date: ${DateFormat('yyyy-MM-dd HH:mm').format(diagnosis.timestamp)}'),
-        
+        pw.Text(
+            'Confidence: ${(diagnosis.confidence * 100).toStringAsFixed(1)}%'),
+        pw.Text(
+            'Date: ${DateFormat('yyyy-MM-dd HH:mm').format(diagnosis.timestamp)}'),
         if (diagnosis.doctorNotes != null) ...[
-           pw.SizedBox(height: 20),
-           pw.Text('Doctor Notes:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-           pw.Text(diagnosis.doctorNotes!),
+          pw.SizedBox(height: 20),
+          pw.Text('Doctor Notes:',
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          pw.Text(diagnosis.doctorNotes!),
         ],
-
         if (doctor != null) ...[
           pw.SizedBox(height: 20),
           pw.Divider(),
@@ -123,8 +125,10 @@ class ReportService {
               pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [
-                  pw.Text('Verified by:', style: const pw.TextStyle(fontSize: 10)),
-                  pw.Text('Dr. ${doctor.name}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                  pw.Text('Verified by:',
+                      style: const pw.TextStyle(fontSize: 10)),
+                  pw.Text('Dr. ${doctor.name}',
+                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                 ],
               ),
             ],

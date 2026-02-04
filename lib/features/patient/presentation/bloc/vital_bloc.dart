@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/repositories/vital_repository_impl.dart';
+import '../../domain/repositories/vital_repository.dart';
 import '../../domain/entities/vital_sign.dart';
 
 // --- Events ---
@@ -43,7 +43,7 @@ class VitalConnecting extends VitalState {}
 class VitalConnected extends VitalState {
   final List<VitalSign> history;
   final VitalSign current;
-  
+
   const VitalConnected({
     required this.history,
     required this.current,
@@ -68,7 +68,7 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
   StreamSubscription? _vitalSubscription;
 
   // Keep last 60 points for 1-minute history (assuming 1Hz)
-  static const int _maxHistoryLength = 60; 
+  static const int _maxHistoryLength = 60;
 
   VitalBloc({required this.repository}) : super(VitalInitial()) {
     on<ConnectVitalDevice>(_onConnect);
@@ -83,10 +83,10 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
     emit(VitalConnecting());
     try {
       await repository.connect(event.ipAddress);
-      
+
       // Cancel existing subscription if any
       await _vitalSubscription?.cancel();
-      
+
       _vitalSubscription = repository.vitalSignStream.listen(
         (failureOrVisual) {
           failureOrVisual.fold(
@@ -114,7 +114,7 @@ class VitalBloc extends Bloc<VitalEvent, VitalState> {
     Emitter<VitalState> emit,
   ) {
     final List<VitalSign> currentHistory;
-    
+
     if (state is VitalConnected) {
       currentHistory = List.of((state as VitalConnected).history);
     } else {

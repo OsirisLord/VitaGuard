@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:tflite_flutter/tflite_flutter.dart';
 
@@ -7,10 +6,10 @@ import '../errors/exceptions.dart';
 
 class TfliteService {
   Interpreter? _interpreter;
-  
+
   // Model input shape (efficientnet-b0 usually 224x224)
   static const int _inputSize = 224;
-  
+
   // Normalize mean and std for ImageNet (common for transfer learning)
   // Adjust these if your specific training used different normalization
   static const List<double> _mean = [0.485, 0.456, 0.406];
@@ -21,8 +20,8 @@ class TfliteService {
     try {
       final options = InterpreterOptions();
       // Use XNNPACK delegate for CPU acceleration if available
-      // options.addDelegate(XNNPackDelegate()); 
-      
+      // options.addDelegate(XNNPackDelegate());
+
       _interpreter = await Interpreter.fromAsset(
         'assets/models/model_optimized.tflite',
         options: options,
@@ -67,14 +66,13 @@ class TfliteService {
 
       // 5. Process results
       final result = output[0] as List<double>;
-      
+
       // Assuming index 0 = Normal, index 1 = Pneumonia
       // You should verify this mapping with your training notebook
       return {
         'Normal': result[0],
         'Pneumonia': result[1],
       };
-
     } catch (e) {
       throw ModelException(message: 'Inference failed: $e');
     }
@@ -98,7 +96,7 @@ class TfliteService {
           _inputSize,
           (x) {
             final pixel = resized.getPixel(x, y);
-            
+
             // Normalize RGB values
             final r = (pixel.r / 255.0 - _mean[0]) / _std[0];
             final g = (pixel.g / 255.0 - _mean[1]) / _std[1];

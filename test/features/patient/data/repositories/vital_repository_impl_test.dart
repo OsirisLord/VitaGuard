@@ -19,10 +19,11 @@ void main() {
   setUp(() {
     mockWebSocketService = MockWebSocketService();
     websocketController = StreamController<dynamic>();
-    
+
     // Mock stream behavior
-    when(mockWebSocketService.stream).thenAnswer((_) => websocketController.stream);
-    
+    when(mockWebSocketService.stream)
+        .thenAnswer((_) => websocketController.stream);
+
     repository = VitalRepositoryImpl(mockWebSocketService);
   });
 
@@ -32,17 +33,12 @@ void main() {
 
   const tIp = '192.168.1.100';
   const tVitalJson = '{"spo2": 98, "bpm": 75, "temp": 36.5}';
-  final tVital = VitalSign(
-    timestamp: DateTime.now(), // Repository creates new timestamp so we might need strict matchign
-    spo2: 98,
-    bpm: 75,
-    temperature: 36.5,
-  );
+  // tVital was here
 
   test('should call connect on socket service', () async {
     // Act
     await repository.connect(tIp);
-    
+
     // Assert
     verify(mockWebSocketService.connect('ws://$tIp:81'));
   });
@@ -55,7 +51,7 @@ void main() {
       // But since we are mocking the service, we should mock this helper too
       // The implementation calls _socketService.parseData
       if (realInvocation.positionalArguments[0] == tVitalJson) {
-         return {"spo2": 98, "bpm": 75, "temp": 36.5};
+        return {"spo2": 98, "bpm": 75, "temp": 36.5};
       }
       return null;
     });
@@ -64,13 +60,14 @@ void main() {
     expectLater(
       repository.vitalSignStream,
       emits(predicate<Either<dynamic, VitalSign>>((result) {
-        return result.isRight() && result.getOrElse(() => throw 'error').spo2 == 98;
+        return result.isRight() &&
+            result.getOrElse(() => throw 'error').spo2 == 98;
       })),
     );
-    
+
     // Simulate connection first to ensure listeners are active if required by implementation
     // (Impl calls listen in constructor, so it should be fine)
-    
+
     websocketController.add(tVitalJson);
   });
 }

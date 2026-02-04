@@ -48,7 +48,8 @@ class ProfilePage extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundColor: AppColors.primary.withOpacity(0.1),
+                        backgroundColor:
+                            AppColors.primary.withValues(alpha: 0.1),
                         backgroundImage: user.photoUrl != null
                             ? NetworkImage(user.photoUrl!)
                             : null,
@@ -111,7 +112,7 @@ class ProfilePage extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: _getRoleColor(user.roleEnum).withOpacity(0.1),
+                    color: _getRoleColor(user.roleEnum).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -174,8 +175,7 @@ class ProfilePage extends StatelessWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Logout'),
-                        content: const Text(
-                            'Are you sure you want to logout?'),
+                        content: const Text('Are you sure you want to logout?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),

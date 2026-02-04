@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/chat_repository.dart';
 import '../models/message_model.dart';
-import '../../../auth/domain/entities/user.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
   final FirebaseFirestore firestore;
@@ -97,7 +95,7 @@ class ChatRepositoryImpl implements ChatRepository {
       String currentUserId, String senderId) async {
     try {
       final chatId = _getChatId(currentUserId, senderId);
-      
+
       // Update local unread flag in chat metadata
       // Ideally we also update individual messages, but for MVP metadata is fine
       await firestore.collection('chats').doc(chatId).update({

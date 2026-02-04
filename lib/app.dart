@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'config/routes/app_router.dart';
 import 'config/themes/app_theme.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/presentation/bloc/auth_event.dart';
 import 'injection_container.dart';
 
 /// The root widget of the VitaGuard application.

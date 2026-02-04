@@ -12,6 +12,7 @@
 ## ✨ Features
 
 ### 👤 For Patients
+
 *   **AI Scan**: Upload or take photos of chest X-rays for instant Pneumonia analysis using on-device AI.
 *   **Real-time Vitals**: Connect to ESP32-based IoT devices to monitor SpO2, Heart Rate, and Temperature in real-time.
 *   **Emergency SOS**: One-tap alert to notify companions and doctors with your location and status.
@@ -19,11 +20,13 @@
 *   **Reports**: Generate professional PDF reports of your diagnosis history.
 
 ### 👨‍⚕️ For Doctors
+
 *   **Patient Dashboard**: Monitor multiple patients' vitals and alerts.
 *   **Diagnosis Verification**: Review AI analysis results and add medical notes.
 *   **Chat**: Secure messaging with patients.
 
 ### 👥 For Companions
+
 *   **Remote Monitoring**: Keep track of loved ones' health status.
 *   **Alerts**: Receive push notifications for critical health events (low SpO2, high temp, SOS).
 
@@ -47,6 +50,7 @@
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 *   [Flutter SDK](https://flutter.dev/docs/get-started/install) installed.
 *   [Visual Studio Code](https://code.visualstudio.com/) or Android Studio.
 *   A Firebase Project with `google-services.json` (Android) / `GoogleService-Info.plist` (iOS).
@@ -54,21 +58,25 @@
 ### Installation
 
 1.  **Clone the repository**
+
     ```bash
     git clone https://github.com/yourusername/vitaguard.git
     cd vitaguard
     ```
 
 2.  **Install dependencies**
+
     ```bash
     flutter pub get
     ```
 
 3.  **Setup Firebase**
+
     *   Place `google-services.json` in `android/app/`.
     *   Place `GoogleService-Info.plist` in `ios/Runner/`.
 
 4.  **Run the app**
+
     ```bash
     flutter run
     ```
@@ -94,9 +102,11 @@ lib/
 ## 🧪 Testing
 
 Run the full test suite:
+
 ```bash
 flutter test
 ```
+
 *   **Unit Tests**: Core logic, Repositories, BLoCs.
 *   **Widget Tests**: UI components and Screens.
 *   **Integration Tests**: App flow smoke tests.
@@ -104,6 +114,7 @@ flutter test
 ## 📦 Deployment
 
 ### Android
+
 ```bash
 flutter build apk --release
 ```

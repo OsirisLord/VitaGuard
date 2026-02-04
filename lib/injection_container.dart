@@ -4,18 +4,17 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'core/constants/app_constants.dart';
 import 'core/network/api_client.dart';
 import 'core/network/network_info.dart';
 import 'core/security/biometric_auth.dart';
 import 'core/security/encryption_service.dart';
 import 'core/security/secure_storage.dart';
 import 'core/services/tflite_service.dart';
-import 'core/utils/bloc_observer.dart';
+
 import 'features/auth/data/datasources/auth_local_datasource.dart';
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -29,7 +28,7 @@ import 'features/patient/data/repositories/analysis_repository_impl.dart';
 import 'features/patient/data/repositories/vital_repository_impl.dart'; // IoT
 import 'features/patient/domain/repositories/analysis_repository.dart';
 import 'features/patient/domain/repositories/vital_repository.dart';
-import 'features/patient/presentation/bloc/scan_bloc.dart';
+
 import 'features/chat/data/repositories/chat_repository_impl.dart';
 import 'features/chat/domain/repositories/chat_repository.dart';
 
@@ -47,8 +46,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
   sl.registerLazySingleton<FirebaseStorage>(() => FirebaseStorage.instance);
   sl.registerLazySingleton<http.Client>(() => http.Client());
-  sl.registerLazySingleton<InternetConnectionChecker>(
-      () => InternetConnectionChecker());
+  sl.registerLazySingleton<InternetConnection>(() => InternetConnection());
   sl.registerLazySingleton<LocalAuthentication>(() => LocalAuthentication());
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
@@ -63,7 +61,7 @@ Future<void> initDependencies() async {
 
   // ==================== Core ====================
   sl.registerLazySingleton<NetworkInfo>(
-      () => NetworkInfoImpl(sl<InternetConnectionChecker>()));
+      () => NetworkInfoImpl(internetConnection: sl()));
   sl.registerLazySingleton<EncryptionService>(() => EncryptionServiceImpl());
   sl.registerLazySingleton<SecureStorageService>(
     () => SecureStorageServiceImpl(sl<FlutterSecureStorage>()),
@@ -72,7 +70,7 @@ Future<void> initDependencies() async {
     () => ApiClient(client: sl<http.Client>()),
   );
   sl.registerLazySingleton<BiometricAuthService>(
-      () => BiometricAuthServiceImpl(sl<LocalAuthentication>()));
+      () => BiometricAuthServiceImpl());
   sl.registerLazySingleton<TfliteService>(() => TfliteService());
 
   // ==================== Features - Auth ====================

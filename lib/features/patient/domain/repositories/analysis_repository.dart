@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/errors/failures.dart';
-import 'diagnosis_result.dart';
+import '../entities/diagnosis_result.dart';
 
 /// Repository interface for X-ray analysis operations.
 abstract class AnalysisRepository {

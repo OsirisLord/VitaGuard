@@ -182,8 +182,10 @@ class PatientDashboardPage extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('EMERGENCY SOS', style: TextStyle(color: Colors.red)),
-              content: const Text('This will send a critical alert to all your companions and doctors. Are you sure?'),
+              title: const Text('EMERGENCY SOS',
+                  style: TextStyle(color: Colors.red)),
+              content: const Text(
+                  'This will send a critical alert to all your companions and doctors. Are you sure?'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -209,7 +211,8 @@ class PatientDashboardPage extends StatelessWidget {
         },
         backgroundColor: Colors.red,
         icon: const Icon(Icons.warning_amber_rounded, color: Colors.white),
-        label: const Text('SOS', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        label: const Text('SOS',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: 0,
@@ -218,20 +221,20 @@ class PatientDashboardPage extends StatelessWidget {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.monitor_heart),
             label: 'Vitals',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.chat),
             label: 'Chat',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
-        onTap: (index) {
+        onDestinationSelected: (index) {
           switch (index) {
             case 2:
               context.push(AppRouter.chat);
@@ -276,7 +279,7 @@ class _VitalSignsCard extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -305,7 +308,7 @@ class _VitalSignsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _VitalIndicator(
+              const _VitalIndicator(
                 icon: Icons.favorite,
                 value: '72',
                 unit: 'BPM',
@@ -314,9 +317,9 @@ class _VitalSignsCard extends StatelessWidget {
               Container(
                 width: 1,
                 height: 60,
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
               ),
-              _VitalIndicator(
+              const _VitalIndicator(
                 icon: Icons.air,
                 value: '98',
                 unit: '%',
@@ -359,7 +362,7 @@ class _VitalIndicator extends StatelessWidget {
             Text(
               unit,
               style: AppTextStyles.vitalUnit.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
               ),
             ),
           ],
@@ -368,7 +371,7 @@ class _VitalIndicator extends StatelessWidget {
         Text(
           label,
           style: AppTextStyles.labelSmall.copyWith(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -396,9 +399,9 @@ class _QuickActionCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [

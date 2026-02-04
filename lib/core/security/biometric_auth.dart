@@ -56,11 +56,8 @@ class BiometricAuthServiceImpl implements BiometricAuthService {
     try {
       return await _localAuth.authenticate(
         localizedReason: reason,
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: false, // Allow PIN/pattern as fallback
-          useErrorDialogs: true,
-        ),
+        persistAcrossBackgrounding: true, // formerly stickyAuth
+        biometricOnly: false,
       );
     } on PlatformException catch (e) {
       // Handle specific platform exceptions

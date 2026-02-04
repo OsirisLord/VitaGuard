@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
-import '../../../../depedency_injection.dart'; // We'll update this
+import '../../../../injection_container.dart'; // We'll update this
 import '../../../auth/presentation/bloc/auth_bloc.dart'; // Get current user
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../domain/entities/diagnosis_result.dart';
@@ -14,7 +14,9 @@ import '../../../../core/services/report_service.dart'; // Import
 import '../bloc/scan_bloc.dart';
 
 class XrayAnalysisPage extends StatefulWidget {
-  const XrayAnalysisPage({super.key});
+  final ScanBloc? scanBloc;
+
+  const XrayAnalysisPage({super.key, this.scanBloc});
 
   @override
   State<XrayAnalysisPage> createState() => _XrayAnalysisPageState();
@@ -28,6 +30,13 @@ class _XrayAnalysisPageState extends State<XrayAnalysisPage> {
     String patientId = '';
     if (authState is Authenticated) {
       patientId = authState.user.id;
+    }
+
+    if (widget.scanBloc != null) {
+      return BlocProvider.value(
+        value: widget.scanBloc!,
+        child: const _XrayAnalysisView(),
+      );
     }
 
     return BlocProvider(
@@ -46,7 +55,7 @@ class _XrayAnalysisView extends StatelessWidget {
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
-    
+
     if (pickedFile != null && context.mounted) {
       context.read<ScanBloc>().add(ScanImagePicked(File(pickedFile.path)));
     }
@@ -62,11 +71,15 @@ class _XrayAnalysisView extends StatelessWidget {
         listener: (context, state) {
           if (state is ScanFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
+              SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: AppColors.error),
             );
           } else if (state is ScanSaved) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Result saved to history!'), backgroundColor: AppColors.success),
+              const SnackBar(
+                  content: Text('Result saved to history!'),
+                  backgroundColor: AppColors.success),
             );
           }
         },
@@ -74,12 +87,13 @@ class _XrayAnalysisView extends StatelessWidget {
           if (state is ScanAnalyzing || state is ScanSaving) {
             return const Center(child: CircularProgressIndicator());
           }
-          
+
           if (state is ScanSuccess) {
             return _ResultView(
-              result: state.result, 
+              result: state.result,
               image: state.image,
-              onSave: () => context.read<ScanBloc>().add(ScanResultSaved(state.result)),
+              onSave: () =>
+                  context.read<ScanBloc>().add(ScanResultSaved(state.result)),
               onRetake: () => context.read<ScanBloc>().add(ScanReset()),
               onGenerateReport: () => _generateReport(context, state.result),
             );
@@ -93,14 +107,16 @@ class _XrayAnalysisView extends StatelessWidget {
       ),
     );
   }
-  Future<void> _generateReport(BuildContext context, DiagnosisResult result) async {
+
+  Future<void> _generateReport(
+      BuildContext context, DiagnosisResult result) async {
     // We need current user (patient) and maybe doctor info
     // For now we mock or fetch from auth
     final authState = context.read<AuthBloc>().state;
     if (authState is Authenticated) {
       final reportService = sl<ReportService>();
       await reportService.generateDiagnosisReport(
-        result, 
+        result,
         authState.user,
         null, // No verified doctor yet
       );
@@ -121,7 +137,8 @@ class _InitialView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.document_scanner_outlined, size: 80, color: AppColors.primary),
+          const Icon(Icons.document_scanner_outlined,
+              size: 80, color: AppColors.primary),
           const SizedBox(height: 24),
           Text(
             'Upload Chest X-Ray',
@@ -131,11 +148,11 @@ class _InitialView extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             'Get instant AI-powered analysis for pneumonia detection',
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.bodyMedium
+                .copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 48),
-          
           _OptionButton(
             icon: Icons.camera_alt,
             label: 'Take Photo',
@@ -177,21 +194,21 @@ class _OptionButton extends StatelessWidget {
       width: double.infinity,
       height: 56,
       child: isOutlined
-        ? OutlinedButton.icon(
-            onPressed: onTap,
-            icon: Icon(icon),
-            label: Text(label),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: color),
-              foregroundColor: color,
+          ? OutlinedButton.icon(
+              onPressed: onTap,
+              icon: Icon(icon),
+              label: Text(label),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: color),
+                foregroundColor: color,
+              ),
+            )
+          : ElevatedButton.icon(
+              onPressed: onTap,
+              icon: Icon(icon),
+              label: Text(label),
+              style: ElevatedButton.styleFrom(backgroundColor: color),
             ),
-          )
-        : ElevatedButton.icon(
-            onPressed: onTap,
-            icon: Icon(icon),
-            label: Text(label),
-            style: ElevatedButton.styleFrom(backgroundColor: color),
-          ),
     );
   }
 }
@@ -221,7 +238,8 @@ class _ResultViewState extends State<_ResultView> {
   @override
   Widget build(BuildContext context) {
     // Assuming binary result with thresholds
-    final isPositive = widget.result.diagnosis.toLowerCase().contains('pneumonia');
+    final isPositive =
+        widget.result.diagnosis.toLowerCase().contains('pneumonia');
     final color = isPositive ? AppColors.error : AppColors.success;
 
     return SingleChildScrollView(
@@ -245,7 +263,7 @@ class _ResultViewState extends State<_ResultView> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
-                      color: Colors.red.withOpacity(0.3),
+                      color: Colors.red.withValues(alpha: 0.3),
                       child: const Center(
                         child: Text(
                           'Heatmap Simulation',
@@ -278,13 +296,12 @@ class _ResultViewState extends State<_ResultView> {
             ),
           ),
           const SizedBox(height: 24),
-          
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: color.withOpacity(0.3)),
+              border: Border.all(color: color.withValues(alpha: 0.3)),
             ),
             child: Column(
               children: [
@@ -300,14 +317,13 @@ class _ResultViewState extends State<_ResultView> {
                 ),
                 Text(
                   'Confidence: ${(widget.result.confidence * 100).toStringAsFixed(1)}%',
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.bodyMedium
+                      .copyWith(color: AppColors.textSecondary),
                 ),
               ],
             ),
           ),
-          
           const SizedBox(height: 32),
-          
           ElevatedButton(
             onPressed: widget.onSave,
             child: const Text('Save Result'),

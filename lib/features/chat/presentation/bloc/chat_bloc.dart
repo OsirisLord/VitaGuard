@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
@@ -77,13 +78,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final String currentUserId; // Injected
   StreamSubscription? _messagesSubscription;
 
-  ChatBloc({
-    required this.repository, 
-    required this.currentUserId
-  }) : super(ChatInitial()) {
+  ChatBloc({required this.repository, required this.currentUserId})
+      : super(ChatInitial()) {
     on<LoadMessages>(_onLoadMessages);
     on<SendMessage>(_onSendMessage);
     on<LoadRecentChats>(_onLoadRecentChats);
+    addInternalHandlers();
   }
 
   Future<void> _onLoadMessages(
@@ -92,7 +92,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async {
     emit(ChatLoading());
     await _messagesSubscription?.cancel();
-    
+
     _messagesSubscription = repository
         .getMessages(currentUserId, event.otherUserId)
         .listen((failureOrMessages) {

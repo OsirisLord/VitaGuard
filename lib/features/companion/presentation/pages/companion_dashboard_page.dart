@@ -112,22 +112,28 @@ class CompanionDashboardPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: 0,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+          NavigationDestination(
+            icon: Icon(Icons.chat_outlined),
+            selectedIcon: Icon(Icons.chat),
             label: 'Chat',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
+        onDestinationSelected: (index) {
+          // TODO: Implement navigation
+        },
       ),
     );
   }
@@ -176,7 +182,7 @@ class _PatientCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundColor: AppColors.companionRole.withOpacity(0.1),
+                backgroundColor: AppColors.companionRole.withValues(alpha: 0.1),
                 child: Text(
                   name.split(' ').map((n) => n[0]).take(2).join(),
                   style: AppTextStyles.labelLarge.copyWith(
@@ -211,8 +217,8 @@ class _PatientCard extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isOnline
-                      ? AppColors.success.withOpacity(0.1)
-                      : Colors.grey.withOpacity(0.1),
+                      ? AppColors.success.withValues(alpha: 0.1)
+                      : Colors.grey.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -306,7 +312,7 @@ class _VitalMini extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -366,9 +372,9 @@ class _AlertCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [

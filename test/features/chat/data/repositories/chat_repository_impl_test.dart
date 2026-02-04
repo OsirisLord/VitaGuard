@@ -4,13 +4,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:vitaguard/core/errors/failures.dart';
-import 'package:vitaguard/features/chat/data/models/message_model.dart';
 import 'package:vitaguard/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:vitaguard/features/chat/domain/entities/chat_message.dart';
 
 import 'chat_repository_impl_test.mocks.dart';
 
-@GenerateMocks([FirebaseFirestore, CollectionReference, DocumentReference, DocumentSnapshot])
+@GenerateMocks([
+  FirebaseFirestore,
+  CollectionReference,
+  DocumentReference,
+  DocumentSnapshot
+])
 void main() {
   late ChatRepositoryImpl repository;
   late MockFirebaseFirestore mockFirestore;
@@ -36,13 +40,7 @@ void main() {
     repository = ChatRepositoryImpl(firestore: mockFirestore);
   });
 
-  const tMessage = ChatMessage(
-    id: 'msg1',
-    senderId: 'u1',
-    receiverId: 'u2',
-    content: 'Hello',
-    timestamp: null, // We'll handle this in creating valid object usually
-  );
+  // tMessage was here
 
   // Correction for timestamp in test object
   final tValidMessage = ChatMessage(
@@ -53,10 +51,12 @@ void main() {
     timestamp: DateTime.now(),
   );
 
-  test('sendMessage should add message to firestore and update metadata', () async {
+  test('sendMessage should add message to firestore and update metadata',
+      () async {
     // Arrange
     when(mockSubDocRef.set(any)).thenAnswer((_) async => {});
-    when(mockDocRef.set(any, any)).thenAnswer((_) async => {}); // For metadata merge
+    when(mockDocRef.set(any, any))
+        .thenAnswer((_) async => {}); // For metadata merge
 
     // Act
     final result = await repository.sendMessage(tValidMessage);
