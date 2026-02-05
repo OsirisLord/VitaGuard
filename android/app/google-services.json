@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "30833655757",
+    "project_id": "vitaguard-51286",
+    "storage_bucket": "vitaguard-51286.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30833655757:android:ed1995333b523e05d0ce84",
+        "android_client_info": {
+          "package_name": "com.collegenile.vitaguard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0-DVZEBeewccUJKjVz_wt4w2Lc4iFCZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
