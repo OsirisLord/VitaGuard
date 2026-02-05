@@ -47,11 +47,11 @@ class DefaultFirebaseOptions {
   // TODO: Replace these placeholder values with actual Firebase config
   // Run: flutterfire configure
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'YOUR_ANDROID_API_KEY',
-    appId: 'YOUR_ANDROID_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'vitaguard-app',
-    storageBucket: 'vitaguard-app.appspot.com',
+    apiKey: 'AIzaSyB0-DVZEBeewccUJKjVz_wt4w2Lc4iFCZI',
+    appId: '1:30833655757:android:ed1995333b523e05d0ce84',
+    messagingSenderId: '30833655757',
+    projectId: 'vitaguard-51286',
+    storageBucket: 'vitaguard-51286.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
